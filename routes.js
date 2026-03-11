@@ -31,8 +31,20 @@
       ['e-revolution_035', 'https://hop.clickbank.net/?affiliate=marketcopi&vendor=enrev&traffic_source=snexus&traffic_type=sms&campaign=e-revolution_035&creative=cr_cb_e-revolution_offer_025'],
       ['e-revolution_036', 'https://hop.clickbank.net/?affiliate=marketcopi&vendor=enrev&traffic_source=clksnd&traffic_type=sms&campaign=e-revolution_036&creative=cr_cb_e-revolution_offer_026'],
       ['e-revolution_037', 'https://hop.clickbank.net/?affiliate=marketcopi&vendor=enrev&traffic_source=snexus&traffic_type=sms&campaign=e-revolution_037&creative=cr_cb_e-revolution_offer_027'],
-    ]
+
+      ['geniussong_016', 'https://hop.clickbank.net/?affiliate=marketcopi&vendor=geniusbr&pid=vsl&traffic_source=send_nexus&traffic_type=sms&campaign=geniussong_016&creative=cr_cb_geniussong_offer_007'],
+      ['geniussong_017', 'https://hop.clickbank.net/?affiliate=marketcopi&vendor=geniusbr&pid=vsl&traffic_source=send_nexus&traffic_type=sms&campaign=geniussong_017&creative=cr_cb_geniussong_offer_008'],
+      ['geniussong_018', 'https://hop.clickbank.net/?affiliate=marketcopi&vendor=geniusbr&pid=vsl&traffic_source=send_nexus&traffic_type=sms&campaign=geniussong_018&creative=cr_cb_geniussong_offer_009'],
+      ['geniussong_019', 'https://hop.clickbank.net/?affiliate=marketcopi&vendor=geniusbr&pid=vsl&traffic_source=clksnd&traffic_type=sms&campaign=geniussong_019&creative=cr_cb_geniussong_offer_010'],
+      ['geniussong_024', 'https://hop.clickbank.net/?affiliate=marketcopi&vendor=geniusbr&pid=vsl&traffic_source=send_nexus&traffic_type=sms&campaign=geniussong_024&creative=cr_cb_geniussong_offer_015'],
+      ['geniussong_025', 'https://hop.clickbank.net/?affiliate=marketcopi&vendor=geniusbr&pid=vsl&traffic_source=send_nexus&traffic_type=sms&campaign=geniussong_025&creative=cr_cb_geniussong_offer_016'],
+      ['geniussong_026', 'https://hop.clickbank.net/?affiliate=marketcopi&vendor=geniusbr&pid=vsl&traffic_source=send_nexus&traffic_type=sms&campaign=geniussong_026&creative=cr_cb_geniussong_offer_017'],
+      ['geniussong_027', 'https://hop.clickbank.net/?affiliate=marketcopi&vendor=geniusbr&pid=vsl&traffic_source=send_nexus&traffic_type=sms&campaign=geniussong_027&creative=cr_cb_geniussong_offer_018'],
+
+      ]
   };
+
+
 
   function resolveRedirectUrl() {
     const fallback = String(routeCfg.defaultUrl || '').trim();
