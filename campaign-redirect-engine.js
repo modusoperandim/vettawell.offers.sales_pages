@@ -85,6 +85,7 @@
       const key = String(row[keyField] || '').trim();
       const rule = String(row.rule || '').trim().toLowerCase();
       if (!key || !rule) continue;
+
       if (rule === 'allow') allowMap.set(key.toLowerCase(), true);
       if (rule === 'block') blockMap.set(key.toLowerCase(), true);
     }
@@ -94,6 +95,28 @@
     return false;
   }
 
+  function normalizeRouteStatus(rawStatus) {
+    const s = norm(rawStatus);
+
+    const statusMap = {
+      // new statuses
+      redirect: 'redirect',
+      stay: 'stay',
+      notfound: 'notfound',
+
+      // backward compatibility
+      active: 'redirect',
+      inactive: 'stay',
+      broken: 'notfound',
+
+      // optional aliases
+      original: 'stay',
+      '404': 'notfound'
+    };
+
+    return statusMap[s] || '';
+  }
+
   function resolveRoute() {
     const settings = cfg.settings;
     const paramName = String(settings.redirect_param_name || 'campaign_id');
@@ -101,7 +124,11 @@
 
     if (!campaign) {
       if (String(settings.no_match_action || 'original') === 'default_redirect' && settings.default_redirect_url) {
-        return { action: 'redirect', url: String(settings.default_redirect_url).trim(), reason: 'no_campaign_default_redirect' };
+        return {
+          action: 'redirect',
+          url: String(settings.default_redirect_url).trim(),
+          reason: 'no_campaign_default_redirect'
+        };
       }
       return { action: 'original', reason: 'no_campaign_param' };
     }
@@ -109,24 +136,33 @@
     const route = (cfg.routes || []).find(r => norm(r.campaign_id) === campaign);
     if (!route) {
       if (String(settings.no_match_action || 'original') === 'default_redirect' && settings.default_redirect_url) {
-        return { action: 'redirect', url: String(settings.default_redirect_url).trim(), reason: 'no_match_default_redirect' };
+        return {
+          action: 'redirect',
+          url: String(settings.default_redirect_url).trim(),
+          reason: 'no_match_default_redirect'
+        };
       }
       return { action: 'original', reason: 'no_route_match' };
     }
 
-    const status = String(route.status || '').trim().toLowerCase();
-    if (status === 'inactive') return { action: 'original', reason: 'route_inactive' };
-    if (status === 'broken') {
+    const status = normalizeRouteStatus(route.status);
+
+    if (status === 'stay') {
+      return { action: 'original', reason: 'route_stay' };
+    }
+
+    if (status === 'notfound') {
       const brokenUrl = String(route.broken_url_override || settings.default_404_url || '').trim();
       return brokenUrl
-        ? { action: 'redirect', url: brokenUrl, reason: 'route_broken' }
-        : { action: 'original', reason: 'route_broken_no_404_url' };
+        ? { action: 'redirect', url: brokenUrl, reason: 'route_notfound' }
+        : { action: 'original', reason: 'route_notfound_no_404_url' };
     }
-    if (status === 'active') {
+
+    if (status === 'redirect') {
       const url = String(route.redirect_url || '').trim();
       return url
-        ? { action: 'redirect', url, reason: 'route_active' }
-        : { action: 'original', reason: 'route_active_missing_url' };
+        ? { action: 'redirect', url, reason: 'route_redirect' }
+        : { action: 'original', reason: 'route_redirect_missing_url' };
     }
 
     return { action: 'original', reason: 'unknown_route_status' };
@@ -165,8 +201,10 @@
       window.addEventListener('wheel', (e) => {
         const dy = e.deltaY || 0;
         if (!dy) return;
+
         const dir = dy > 0 ? 'down' : 'up';
         if (!directionAllowed(dir)) return;
+
         e.preventDefault();
         safeRedirect(targetUrl, target);
       }, { passive: false });
